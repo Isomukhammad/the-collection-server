@@ -1,65 +1,94 @@
 import { Request, Response } from "express";
 import { prisma } from "../server";
+import jwt from "jsonwebtoken";
+import { createHash } from "node:crypto";
 
-export const getAllUsers = async (req: Request, res: Response) => {
-  try {
-    const users = await prisma.user.findMany();
-    res.status(200).json(users);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "An unknown error occurred" });
-    }
-  }
+const generateToken = (user: {
+  id: number;
+  username: string;
+  email: string;
+}) => {
+  if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET not found");
+
+  return jwt.sign(
+    {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1h",
+    },
+  );
 };
 
-export const createUser = async (req: Request, res: Response) => {
-  try {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-      return res
-        .status(400)
-        .json({ error: "Username and password are required" });
-    }
-
-    const user = await prisma.user.create({
-      data: {
-        username,
-        password,
-      },
-    });
-    res.status(201).json({
-      message: "User created successfully",
-      data: user,
-    });
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "An unknown error occurred" });
+class UserController {
+  async getAllUsers(_: Request, res: Response) {
+    try {
+      const users = await prisma.user.findMany();
+      res.status(200).json(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(error);
     }
   }
-};
 
-export const deleteUserById = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const user = await prisma.user.delete({
+  async registerUser(req: Request, res: Response) {
+    try {
+      const { username, email, password } = req.body;
+      const saltedHash = createHash("SHA3-256")
+        .update(password + process.env.PASSWORD_SALT)
+        .digest("hex");
+
+      await prisma.user.create({
+        data: {
+          username,
+          email,
+          password: saltedHash,
+        },
+      });
+      res.status(201).json({
+        message: "User created successfully",
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(error);
+    }
+  }
+
+  async loginUser(req: Request, res: Response) {
+    const { email, password } = req.body;
+
+    const user = await prisma.user.findUnique({
       where: {
-        id: parseInt(id),
+        email,
       },
     });
+
+    if (!user)
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+
+    const saltedHash = createHash("SHA3-256")
+      .update(password + process.env.PASSWORD_SALT)
+      .digest("hex");
+
+    if (user.password !== saltedHash)
+      return res.status(401).json({
+        status: "error",
+        message: "Invalid password",
+      });
+
+    const token = generateToken(user);
+    res.setHeader("Authorization", `Bearer ${token}`);
     res.status(200).json({
-      message: "User deleted successfully",
-      data: user,
+      status: "success",
+      message: "User logged in successfully",
     });
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "An unknown error occurred" });
-    }
   }
-};
+}
+
+export default new UserController();
