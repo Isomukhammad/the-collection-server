@@ -1,7 +1,9 @@
 import cors from "cors";
 import express from "express";
 
-import { userRoutes } from "./routes/userRoutes";
+import { profileRoutes } from "./routes/profileRoutes";
+import { authRoutes } from "./routes/authRoutes";
+import { usersRouter } from "./routes/usersRoutes";
 
 const app = express();
 
@@ -12,6 +14,8 @@ app.get("/", (req, res) => {
   res.send("Hello, world!");
 });
 
-app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/profile", profileRoutes);
+app.use("/api/v1/users", usersRouter);
 
 export { app };

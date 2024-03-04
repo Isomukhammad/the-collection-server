@@ -1,12 +1,10 @@
 import express from "express";
-import UserController from "../controllers/userController";
+import UserController from "../controllers/authController";
 import { validateBody } from "../utils/validation";
-import { checkRole } from "../middleware/auth";
 
-const userRoutes = express.Router();
+const authRoutes = express.Router();
 
-userRoutes
-  .get("/", checkRole("ADMIN"), UserController.getAllUsers)
+authRoutes
   .post(
     "/register",
     validateBody(["username", "email", "password"]),
@@ -18,4 +16,4 @@ userRoutes
     UserController.loginUser,
   );
 
-export { userRoutes };
+export { authRoutes };

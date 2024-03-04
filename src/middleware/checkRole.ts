@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { roles } from "../config/roles";
+import jwt from "jsonwebtoken";
 
 interface User {
   role: string;
@@ -11,14 +12,11 @@ interface RequestWithUser extends Request {
 
 export const checkRole = (role: string) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const userRole = (req as RequestWithUser).user.role;
-
-    if (role === roles.ADMIN) {
-      return next();
-    } else {
-      return res.status(403).json({
-        message: "Unauthorized access",
-      });
-    }
+    const token = req.token;
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    const decode = jwt.verify(token, process.env.JWT_SECRET!) as User;
+    if (decode.role !== role)
+      return res.status(403).json({ message: "Forbidden" });
+    next();
   };
 };

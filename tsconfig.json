@@ -8,6 +8,7 @@
     "skipLibCheck": true,
     "outDir": "./dist"
   },
+  "files": ["src/types.d.ts"],
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }

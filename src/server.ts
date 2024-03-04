@@ -5,6 +5,11 @@ import { app } from "./app";
 export const prisma = new PrismaClient();
 const PORT = process.env.PORT || 8080;
 
+if (!process.env.JWT_SECRET || !process.env.PASSWORD_SALT) {
+  console.error("JWT_SECRET or PASSWORD_SALT not found");
+  process.exit(1);
+}
+
 prisma
   .$connect()
   .then(() => {

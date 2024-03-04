@@ -2,38 +2,23 @@ import { Request, Response } from "express";
 import { prisma } from "../server";
 import jwt from "jsonwebtoken";
 import { createHash } from "node:crypto";
+import { validateUser } from "../utils/validation";
 
-const generateToken = (user: {
-  id: number;
-  username: string;
-  email: string;
-}) => {
-  if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET not found");
-
+const generateToken = (user: { id: number; email: string; role: string }) => {
   return jwt.sign(
     {
       id: user.id,
-      username: user.username,
       email: user.email,
+      role: user.role,
     },
-    process.env.JWT_SECRET,
+    process.env.JWT_SECRET!,
     {
       expiresIn: "1h",
     },
   );
 };
 
-class UserController {
-  async getAllUsers(_: Request, res: Response) {
-    try {
-      const users = await prisma.user.findMany();
-      res.status(200).json(users);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json(error);
-    }
-  }
-
+class AuthController {
   async registerUser(req: Request, res: Response) {
     try {
       const { username, email, password } = req.body;
@@ -51,8 +36,12 @@ class UserController {
       res.status(201).json({
         message: "User created successfully",
       });
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      if (error.code === "P2002") {
+        return res.status(400).json({
+          message: "Email already in use",
+        });
+      }
       res.status(500).json(error);
     }
   }
@@ -62,7 +51,10 @@ class UserController {
 
     const user = await prisma.user.findUnique({
       where: {
-        email,
+        email_isDeleted: {
+          email,
+          isDeleted: false,
+        },
       },
     });
 
@@ -82,13 +74,19 @@ class UserController {
         message: "Invalid password",
       });
 
+    const validationError = validateUser(user);
+    if (validationError)
+      return res
+        .status(validationError.status)
+        .json({ message: validationError.message });
+
     const token = generateToken(user);
-    res.setHeader("Authorization", `Bearer ${token}`);
     res.status(200).json({
       status: "success",
       message: "User logged in successfully",
+      token,
     });
   }
 }
 
-export default new UserController();
+export default new AuthController();
