@@ -14,8 +14,11 @@ model User {
   email     String
   password  String
   role      Role     @default(USER)
+  registerDate DateTime @default(now())
   isBlocked Boolean  @default(false)
   isDeleted Boolean  @default(false)
+  collections Collection[]
+  items Item[]
 
   @@unique([email, isDeleted])
 }
@@ -23,4 +26,59 @@ model User {
 enum Role {
   USER
   ADMIN
+}
+
+model Collection {
+  id Int @id @default(autoincrement())
+  name String
+  description String?
+  topic Topic
+  img String?
+  createdAt DateTime @default(now())
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+  items Item[]
+  isDeleted Boolean @default(false)
+}
+
+enum Topic {
+  Books
+  Signs
+  Silverware
+}
+
+model Item {
+  id Int @id @default(autoincrement())
+  name String
+  fields Field[]
+  createdAt DateTime @default(now())
+  collection Collection @relation(fields: [collectionId], references: [id])
+  collectionId Int
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+  isDeleted Boolean @default(false)
+  tags Tag[]
+}
+
+model Field {
+  id Int @id @default(autoincrement())
+  name String
+  type Type
+  value String
+  itemId Int
+  item Item   @relation(fields: [itemId], references: [id])
+}
+
+enum Type {
+  INTEGER
+  STRING
+  MULTILINE_TEXT
+  BOOLEAN
+  DATE
+}
+
+model Tag {
+  id Int @id @default(autoincrement())
+  name String @unique
+  items Item[]
 }

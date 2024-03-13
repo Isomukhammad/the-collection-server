@@ -11,7 +11,7 @@ export const validateParams = (keys: string[], body: Body) => {
   }
 };
 
-export const validateBody = (keys: string[]) => {
+export const validateBody = (keys: string[], otherFieldsAllowed: boolean = false) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const { ...otherFields } = req.body;
 
@@ -19,7 +19,7 @@ export const validateBody = (keys: string[]) => {
       delete otherFields[key];
     });
 
-    if (Object.keys(otherFields).length > 0) {
+    if (Object.keys(otherFields).length > 0 && !otherFieldsAllowed) {
       return res.status(400).json({ message: "Invalid field(s) provided" });
     }
 
