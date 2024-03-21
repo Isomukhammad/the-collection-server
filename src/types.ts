@@ -6,5 +6,5 @@ export enum IRole {
 export type IToken = {
   id: number;
   email: string;
-  roles: IRole;
+  role: IRole;
 };

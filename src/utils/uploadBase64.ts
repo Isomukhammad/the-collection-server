@@ -9,7 +9,7 @@ export const uploadBase64 = async (base64: string) => {
 
     return response.secure_url;
   } catch (error: any) {
-    console.log(error);
+    console.error(error);
     return "";
   }
 };

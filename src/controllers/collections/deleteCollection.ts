@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+
 import { prisma } from "../../server";
 
 export const deleteCollection = async (req: Request, res: Response) => {
@@ -28,8 +29,8 @@ export const deleteCollection = async (req: Request, res: Response) => {
     }
 
     res.status(200).json({
-      status: "success",
-      message: "Collection deleted successfully",
+      status: req.__("success"),
+      message: req.__("collection-deleted"),
     });
   } catch (error: any) {
     res.status(500).json(error);

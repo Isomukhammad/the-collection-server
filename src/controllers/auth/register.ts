@@ -1,5 +1,6 @@
 import { createHash } from "crypto";
 import { Request, Response } from "express";
+
 import { prisma } from "../../server";
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -17,12 +18,12 @@ export const registerUser = async (req: Request, res: Response) => {
       },
     });
     res.status(201).json({
-      message: "User created successfully",
+      message: req.__("user-created"),
     });
   } catch (error: any) {
     if (error.code === "P2002") {
       return res.status(400).json({
-        message: "Email already in use",
+        message: req.__("email-exists"),
       });
     }
     res.status(500).json(error);

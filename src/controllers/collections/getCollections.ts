@@ -1,25 +1,25 @@
 import { Request, Response } from "express";
+
 import { prisma } from "../../server";
 
 export const getCollections = async (req: Request, res: Response) => {
   try {
-    const authorId = req.query.authorId as string | undefined;
-    const quantity = req.query.quantity as string | undefined;
-    const sortBy = req.query.sortBy as "asc" | "desc" | undefined;
+    const quantity = req.query.quantity ? Number(req.query.quantity) : undefined;
+    const createdBy = req.query.createdBy === "asc" ? "asc" : "desc";
 
     const collections = await prisma.collection.findMany({
       where: {
         isDeleted: false,
-        authorId: authorId ? Number(authorId) : undefined,
+        authorId: req.query.authorId ? Number(req.query.authorId) : undefined,
       },
-      take: quantity ? Number(quantity) : undefined,
+      take: quantity,
       orderBy: {
-        createdAt: sortBy || "desc",
+        createdAt: createdBy,
       },
     });
 
     res.status(200).json({
-      status: "success",
+      status: req.__("success"),
       data: collections,
     });
   } catch (error: any) {

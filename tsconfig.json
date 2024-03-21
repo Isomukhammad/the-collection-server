@@ -6,9 +6,10 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "resolveJsonModule": true
   },
-  "files": ["types.d.ts"],
-  "include": ["src/**/*.ts", "types.d.ts"],
+  "files": ["node.config.ts"],
+  "include": ["src/**/*.ts", "node.config.ts"],
   "exclude": ["node_modules"]
 }

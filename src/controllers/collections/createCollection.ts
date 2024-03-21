@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
+
 import { prisma } from "../../server";
-import { decodeJwt } from "../../utils/decodeJwt";
 import { IToken } from "../../types";
+import { decodeJwt } from "../../utils/decodeJwt";
 import { uploadBase64 } from "../../utils/uploadBase64";
 
 export const createCollection = async (req: Request, res: Response) => {
@@ -15,7 +16,7 @@ export const createCollection = async (req: Request, res: Response) => {
     let imgUrl: string | null = null;
 
     if (image) {
-      uploadBase64(image).then((url) => {
+      await uploadBase64(image).then((url) => {
         imgUrl = url;
       });
     }
@@ -30,13 +31,14 @@ export const createCollection = async (req: Request, res: Response) => {
       },
     });
     res.status(201).json({
-      status: "success",
+      status: req.__("success"),
+      message: image,
       data: newCollection,
     });
   } catch (error: any) {
     if (error.code === "P2002") {
       return res.status(400).json({
-        message: "Collection already exists",
+        message: req.__("collection-exists"),
       });
     }
     res.status(500).json(error);

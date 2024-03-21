@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+
 import { prisma } from "../../server";
 
 export const getCollection = async (req: Request, res: Response) => {
@@ -12,13 +13,13 @@ export const getCollection = async (req: Request, res: Response) => {
     });
 
     res.status(200).json({
-      status: "success",
+      status: req.__("success"),
       data: collection,
     });
   } catch (error: any) {
     if (error.code === "P2025") {
       return res.status(404).json({
-        message: "Collection not found",
+        message: req.__("collection-not-found"),
       });
     }
     res.status(500).json(error);

@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
-import { prisma } from "../../server";
 import { createHash } from "crypto";
-import { validateUser } from "../../utils/validation";
+import { Request, Response } from "express";
+
+import { prisma } from "../../server";
 import { generateToken } from "../../utils/generateToken";
+import { validateUser } from "../../utils/validation";
 
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  console.log("login");
   const user = await prisma.user.findUnique({
     where: {
       email_isDeleted: {
@@ -18,8 +18,8 @@ export const loginUser = async (req: Request, res: Response) => {
 
   if (!user)
     return res.status(404).json({
-      status: "error",
-      message: "User not found",
+      status: req.__("error"),
+      message: req.__("user-not-found"),
     });
 
   const saltedHash = createHash("SHA3-256")
@@ -28,20 +28,17 @@ export const loginUser = async (req: Request, res: Response) => {
 
   if (user.password !== saltedHash)
     return res.status(401).json({
-      status: "error",
-      message: "Invalid password",
+      status: req.__("error"),
+      message: req.__("invalid-password"),
     });
 
   const validationError = validateUser(user);
-  if (validationError)
-    return res
-      .status(validationError.status)
-      .json({ message: validationError.message });
+  if (validationError) return res.status(validationError.status).json({ message: validationError.message });
 
   const token = generateToken(user);
   res.status(200).json({
-    status: "success",
-    message: "User logged in successfully",
+    status: req.__("success"),
+    message: req.__("logged-success"),
     token,
   });
 };

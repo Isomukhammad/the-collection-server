@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from "express";
 import { User } from "@prisma/client";
+import { NextFunction, Request, Response } from "express";
 
 type Body = { [key: string]: any };
 

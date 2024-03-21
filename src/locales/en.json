@@ -1,0 +1,22 @@
+{
+  "collection-deleted": "Collection deleted successfully",
+  "collection-exists": "Collection already exists",
+  "collection-not-found": "Collection not found",
+  "email-exists": "Email already in use",
+  "error": "Error",
+  "failed": "Failed",
+  "forbidden": "Forbidden access",
+  "invalid-password": "Invalid password",
+  "item-deleted": "Item deleted successfully",
+  "key-required": "{{key}} is required",
+  "logged-success": "You logged in successfully",
+  "no-permission": "You don't have permission",
+  "not-found": "Not found",
+  "password-edit-success": "Password changed successfully",
+  "success": "Success",
+  "token-required": "Token is required",
+  "unauthorized": "Unauthorized access",
+  "user-not-found": "User not found",
+  "user-created": "User created successfully",
+  "user-updated": "User updated successfully"
+}
