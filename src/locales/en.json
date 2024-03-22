@@ -7,6 +7,7 @@
   "failed": "Failed",
   "forbidden": "Forbidden access",
   "invalid-password": "Invalid password",
+  "invalid-token": "Invalid token",
   "item-deleted": "Item deleted successfully",
   "key-required": "{{key}} is required",
   "logged-success": "You logged in successfully",
@@ -14,9 +15,10 @@
   "not-found": "Not found",
   "password-edit-success": "Password changed successfully",
   "success": "Success",
+  "token-expired": "Token is expired",
   "token-required": "Token is required",
   "unauthorized": "Unauthorized access",
-  "user-not-found": "User not found",
   "user-created": "User created successfully",
+  "user-not-found": "User not found",
   "user-updated": "User updated successfully"
 }

@@ -7,15 +7,17 @@
   "failed": "Ошибка",
   "forbidden": "Доступ запрещен",
   "invalid-password": "Неверный пароль",
+  "invalid-token": "Неверный токен",
   "item-deleted": "Элемент успешно удален",
   "logged-success": "Вы успешно вошли в систему",
   "no-permission": "У вас нет прав для выполнения этого действия",
   "not-found": "Не найдено",
   "password-edit-success": "Пароль успешно изменен",
   "success": "Успешно",
+  "token-expired": "Токен устарел",
   "token-required": "Токен не найден",
   "unauthorized": "Неавторизованный запрос",
-  "user-not-found": "Пользователь не найден",
   "user-created": "Пользователь успешно создан",
+  "user-not-found": "Пользователь не найден",
   "user-updated": "Пользователь успешно обновлен"
 }

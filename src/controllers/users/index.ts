@@ -1,5 +1,6 @@
 import { blockUsers } from "./blockUsers";
 import { deleteUsers } from "./deleteUsers";
+import { editPassword } from "./editPassword";
 import { editUser } from "./editUser";
 import { getAllUsers } from "./getAllUsers";
 import { getUser } from "./getUser";
@@ -9,6 +10,7 @@ export const UsersController = {
   blockUsers,
   deleteUsers,
   editUser,
+  editPassword,
   getAllUsers,
   getUser,
   unblockUsers,
