@@ -5,20 +5,22 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("PGURL")
+  url      = env("PGURL")
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String
-  email     String
-  password  String
-  role      Role     @default(USER)
-  registerDate DateTime @default(now())
-  isBlocked Boolean  @default(false)
-  isDeleted Boolean  @default(false)
-  collections Collection[]
-  items Item[]
+  id           Int          @id @default(autoincrement())
+  username     String
+  email        String
+  password     String
+  role         Role         @default(USER)
+  registerDate DateTime     @default(now())
+  isBlocked    Boolean      @default(false)
+  isDeleted    Boolean      @default(false)
+  collections  Collection[]
+  items        Item[]
+  Like         Like[]
+  Comment      Comment[]
 
   @@unique([email, isDeleted])
 }
@@ -29,16 +31,16 @@ enum Role {
 }
 
 model Collection {
-  id Int @id @default(autoincrement())
-  name String
+  id          Int      @id @default(autoincrement())
+  name        String
   description String?
-  topic Topic
-  img String?
-  createdAt DateTime @default(now())
-  author User @relation(fields: [authorId], references: [id])
-  authorId Int
-  items Item[]
-  isDeleted Boolean @default(false)
+  topic       Topic
+  img         String?
+  createdAt   DateTime @default(now())
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int
+  items       Item[]
+  isDeleted   Boolean  @default(false)
 }
 
 enum Topic {
@@ -48,25 +50,27 @@ enum Topic {
 }
 
 model Item {
-  id Int @id @default(autoincrement())
-  name String
-  fields Field[]
-  createdAt DateTime @default(now())
-  collection Collection @relation(fields: [collectionId], references: [id])
+  id           Int        @id @default(autoincrement())
+  name         String
+  fields       Field[]
+  createdAt    DateTime   @default(now())
+  collection   Collection @relation(fields: [collectionId], references: [id])
   collectionId Int
-  author User @relation(fields: [authorId], references: [id])
-  authorId Int
-  isDeleted Boolean @default(false)
-  tags Tag[]
+  author       User       @relation(fields: [authorId], references: [id])
+  authorId     Int
+  isDeleted    Boolean    @default(false)
+  tags         Tag[]
+  Like         Like[]
+  Comment      Comment[]
 }
 
 model Field {
-  id Int @id @default(autoincrement())
-  name String
-  type Type
-  value String
+  id     Int    @id @default(autoincrement())
+  name   String
+  type   Type
+  value  String
   itemId Int
-  item Item   @relation(fields: [itemId], references: [id])
+  item   Item   @relation(fields: [itemId], references: [id])
 }
 
 enum Type {
@@ -78,7 +82,28 @@ enum Type {
 }
 
 model Tag {
-  id Int @id @default(autoincrement())
-  name String @unique
-  items Item[]
+  id        Int     @id @default(autoincrement())
+  name      String  @unique
+  isDeleted Boolean @default(false)
+  items     Item[]
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  item      Item     @relation(fields: [itemId], references: [id])
+  itemId    Int
+  createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+  item      Item     @relation(fields: [itemId], references: [id])
+  itemId    Int
+  createdAt DateTime @default(now())
+  isDeleted Boolean  @default(false)
 }

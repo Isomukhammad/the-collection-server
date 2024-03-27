@@ -5,6 +5,7 @@ import i18n from "./config/i18n";
 import { authRoutes } from "./routes/authRoutes";
 import { collectionRoutes } from "./routes/collectionRoutes";
 import { itemRoutes } from "./routes/itemRoutes";
+import { tagsRouter } from "./routes/tagsRoutes";
 import { usersRouter } from "./routes/usersRoutes";
 
 const app = express();
@@ -26,5 +27,6 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/collections", collectionRoutes);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/items", itemRoutes);
+app.use("/api/v1/tags", tagsRouter);
 
 export { app };

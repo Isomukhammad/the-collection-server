@@ -2,15 +2,27 @@ import { Request, Response } from "express";
 
 import { prisma } from "../../server";
 
+const getSqlCollection = async (id: number) => {
+  return prisma.collection.findUnique({
+    where: {
+      id: id,
+    },
+    include: {
+      author: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+    },
+  });
+};
+
 export const getCollection = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const collection = await prisma.collection.findUnique({
-      where: {
-        id: Number(id),
-      },
-    });
+    const collection = await getSqlCollection(Number(id));
 
     res.status(200).json({
       status: req.__("success"),

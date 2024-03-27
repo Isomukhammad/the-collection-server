@@ -9,7 +9,7 @@ const itemRoutes = express.Router();
 
 itemRoutes
   .get("/", ItemController.getItems)
-  .post("/", ItemController.createItem)
+  .post("/", checkToken, ItemController.createItem)
   .patch("/:id", checkToken, checkPermission("item"), ItemController.deleteItem);
 
 export { itemRoutes };

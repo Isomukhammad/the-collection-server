@@ -2,24 +2,53 @@ import { Request, Response } from "express";
 
 import { prisma } from "../../server";
 
-export const getCollections = async (req: Request, res: Response) => {
-  try {
-    const quantity = req.query.quantity ? Number(req.query.quantity) : undefined;
-    const createdBy = req.query.createdBy === "asc" ? "asc" : "desc";
-
-    const collections = await prisma.collection.findMany({
+const getDbCollections = async (
+  authorId: number | undefined,
+  quantity: number | undefined,
+  createdBy: "asc" | "desc",
+  isBiggest: boolean,
+) => {
+  if (isBiggest) {
+    return prisma.collection.findMany({
       where: {
         isDeleted: false,
-        authorId: req.query.authorId ? Number(req.query.authorId) : undefined,
+        authorId: authorId ? authorId : undefined,
       },
       take: quantity,
       orderBy: {
-        createdAt: createdBy,
+        items: {
+          _count: "desc",
+        },
+      },
+      include: {
+        items: true,
       },
     });
+  }
+  return prisma.collection.findMany({
+    where: {
+      isDeleted: false,
+      authorId: authorId ? authorId : undefined,
+    },
+    take: quantity,
+    orderBy: {
+      createdAt: createdBy,
+    },
+  });
+};
+
+export const getCollections = async (req: Request, res: Response) => {
+  try {
+    const authorId = req.query.author_id ? Number(req.query.author_id) : undefined;
+    const quantity = req.query.quantity ? Number(req.query.quantity) : undefined;
+    const createdBy = req.query.created_by === "asc" ? "asc" : "desc";
+    const isBiggest = req.query.is_biggest === "1";
+
+    const collections = await getDbCollections(authorId, quantity, createdBy, isBiggest);
 
     res.status(200).json({
       status: req.__("success"),
+      // author: author,
       data: collections,
     });
   } catch (error: any) {
