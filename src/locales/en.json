@@ -9,6 +9,7 @@
   "invalid-password": "Invalid password",
   "invalid-token": "Invalid token",
   "item-deleted": "Item deleted successfully",
+  "item_id required": "Item id is required",
   "key-required": "{{key}} is required",
   "logged-success": "You logged in successfully",
   "no-permission": "You don't have permission",

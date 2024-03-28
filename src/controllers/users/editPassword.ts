@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 
 import { prisma } from "../../server";
-import { IToken } from "../../types";
 import { decodeJwt } from "../../utils/decodeJwt";
 import { hashPassword } from "../../utils/hashPassword";
 
 export const editPassword = async (req: Request, res: Response) => {
-  const { id } = decodeJwt<IToken>(req.token as string);
+  const { id } = decodeJwt(req.token as string);
   const { current_password, new_password } = req.body;
 
   const hashedCurrentPassword = hashPassword(current_password);

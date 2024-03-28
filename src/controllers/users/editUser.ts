@@ -2,13 +2,12 @@ import { User } from "@prisma/client";
 import { Request, Response } from "express";
 
 import { prisma } from "../../server";
-import { IToken } from "../../types";
 import { decodeJwt } from "../../utils/decodeJwt";
 import { hashPassword } from "../../utils/hashPassword";
 
 export const editUser = async (req: Request, res: Response) => {
   const { id, username, email, password, role, isBlocked = false } = req.body as User;
-  const { id: userId, role: userRole } = decodeJwt<IToken>(req.token as string);
+  const { id: userId, role: userRole } = decodeJwt(req.token as string);
 
   if (userId !== id && userRole !== "ADMIN") return res.status(403).json({ message: req.__("no-permission") });
 

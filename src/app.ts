@@ -5,6 +5,7 @@ import i18n from "./config/i18n";
 import { authRoutes } from "./routes/authRoutes";
 import { collectionRoutes } from "./routes/collectionRoutes";
 import { itemRoutes } from "./routes/itemRoutes";
+import { likeRoutes } from "./routes/likeRoutes";
 import { tagsRouter } from "./routes/tagsRoutes";
 import { usersRouter } from "./routes/usersRoutes";
 
@@ -28,5 +29,6 @@ app.use("/api/v1/collections", collectionRoutes);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/items", itemRoutes);
 app.use("/api/v1/tags", tagsRouter);
+app.use("/api/v1/like", likeRoutes);
 
 export { app };

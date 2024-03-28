@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 
 import { prisma } from "../../server";
-import { IToken } from "../../types";
 import { decodeJwt } from "../../utils/decodeJwt";
 import { validateUser } from "../../utils/validation";
 
@@ -9,7 +8,7 @@ export const getUser = async (req: Request, res: Response) => {
   const token = req.token as string;
 
   try {
-    const decoded = decodeJwt<IToken>(token);
+    const decoded = decodeJwt(token);
 
     const user = await prisma.user.findUnique({
       where: {

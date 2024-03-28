@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 
 import { prisma } from "../../server";
-import { IToken } from "../../types";
 import { decodeJwt } from "../../utils/decodeJwt";
 import { uploadBase64 } from "../../utils/uploadBase64";
 
@@ -11,7 +10,7 @@ export const createCollection = async (req: Request, res: Response) => {
   try {
     const { name, description, topic, image } = req.body;
 
-    const decoded = decodeJwt<IToken>(token);
+    const decoded = decodeJwt(token);
 
     let imgUrl: string | null = null;
 

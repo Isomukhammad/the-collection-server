@@ -53,6 +53,7 @@ model Item {
   id           Int        @id @default(autoincrement())
   name         String
   fields       Field[]
+  likeCount    Int       @default(0)
   createdAt    DateTime   @default(now())
   collection   Collection @relation(fields: [collectionId], references: [id])
   collectionId Int
@@ -89,12 +90,11 @@ model Tag {
 }
 
 model Like {
-  id        Int     @id @default(autoincrement())
-  user      User    @relation(fields: [userId], references: [id])
-  userId    Int
-  item      Item    @relation(fields: [itemId], references: [id])
-  itemId    Int
-  isDeleted Boolean @default(false)
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+  item   Item @relation(fields: [itemId], references: [id])
+  itemId Int
 }
 
 model Comment {

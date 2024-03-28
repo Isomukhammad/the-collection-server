@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 
 import { prisma } from "../../server";
-import { IToken } from "../../types";
 import { convertToType } from "../../utils/convertToType";
 import { createTags } from "../../utils/createTags";
 import { decodeJwt } from "../../utils/decodeJwt";
@@ -14,7 +13,7 @@ export const createItem = async (req: Request, res: Response) => {
     fields: { name: string; type: string; value: string }[];
   };
 
-  const user = decodeJwt<IToken>(req.token as string);
+  const user = decodeJwt(req.token as string);
 
   try {
     const newItem = await prisma.item.create({

@@ -9,6 +9,7 @@
   "invalid-password": "Неверный пароль",
   "invalid-token": "Неверный токен",
   "item-deleted": "Элемент успешно удален",
+  "item_id required": "ID элемента обязателен",
   "logged-success": "Вы успешно вошли в систему",
   "no-permission": "У вас нет прав для выполнения этого действия",
   "not-found": "Не найдено",
