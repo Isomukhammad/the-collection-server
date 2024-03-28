@@ -1,20 +1,13 @@
-import { createHash } from "crypto";
 import { Request, Response } from "express";
 
-import { prisma } from "../../server";
 import { generateToken } from "../../utils/generateToken";
+import { saltedPassword } from "../../utils/hashPassword";
+import { findUserByEmail } from "../../utils/prismaRequests";
 import { validateUser } from "../../utils/validation";
 
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  const user = await prisma.user.findUnique({
-    where: {
-      email_isDeleted: {
-        email,
-        isDeleted: false,
-      },
-    },
-  });
+  const user = await findUserByEmail(email);
 
   if (!user)
     return res.status(404).json({
@@ -22,9 +15,7 @@ export const loginUser = async (req: Request, res: Response) => {
       message: req.__("user-not-found"),
     });
 
-  const saltedHash = createHash("SHA3-256")
-    .update(password + process.env.PASSWORD_SALT)
-    .digest("hex");
+  const saltedHash = saltedPassword(password);
 
   if (user.password !== saltedHash)
     return res.status(401).json({

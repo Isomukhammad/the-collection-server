@@ -1,14 +1,12 @@
-import { createHash } from "crypto";
 import { Request, Response } from "express";
 
 import { prisma } from "../../server";
+import { saltedPassword } from "../../utils/hashPassword";
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const { username, email, password } = req.body;
-    const saltedHash = createHash("SHA3-256")
-      .update(password + process.env.PASSWORD_SALT)
-      .digest("hex");
+    const saltedHash = saltedPassword(password);
 
     await prisma.user.create({
       data: {

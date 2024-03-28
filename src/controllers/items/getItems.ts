@@ -5,7 +5,6 @@ import { prisma } from "../../server";
 const getTotalDbItems = async (tags: string[]) => {
   return prisma.item.count({
     where: {
-      isDeleted: false,
       tags: tags.length
         ? {
             some: {
@@ -32,7 +31,6 @@ export const getItems = async (req: Request, res: Response) => {
     const totalDbItems = await getTotalDbItems(tags);
     const items = await prisma.item.findMany({
       where: {
-        isDeleted: false,
         tags: tags.length
           ? {
               some: {

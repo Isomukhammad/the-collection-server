@@ -15,11 +15,10 @@ export const createCollection = async (req: Request, res: Response) => {
 
     let imgUrl: string | null = null;
 
-    if (image) {
+    if (image)
       await uploadBase64(image).then((url) => {
         imgUrl = url;
       });
-    }
 
     const newCollection = await prisma.collection.create({
       data: {

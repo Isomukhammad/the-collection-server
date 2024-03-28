@@ -1,32 +1,14 @@
 import { Request, Response } from "express";
 
 import { prisma } from "../../server";
+import { deleteColelctionById, deleteItemsByCollectionId } from "../../utils/prismaRequests";
 
 export const deleteCollection = async (req: Request, res: Response) => {
-  const { ids } = req.body;
+  const { id: collectionId } = req.params;
 
   try {
-    if (ids.length === 1) {
-      await prisma.collection.update({
-        where: {
-          id: ids[0],
-        },
-        data: {
-          isDeleted: true,
-        },
-      });
-    } else {
-      await prisma.collection.updateMany({
-        where: {
-          id: {
-            in: ids,
-          },
-        },
-        data: {
-          isDeleted: true,
-        },
-      });
-    }
+    await deleteColelctionById(Number(collectionId));
+    await deleteItemsByCollectionId(Number(collectionId));
 
     res.status(200).json({
       status: req.__("success"),

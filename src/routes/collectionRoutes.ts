@@ -1,7 +1,7 @@
 import express from "express";
 
 import { CollectionController } from "../controllers/collections";
-import { checkPermission } from "../middleware/checkPermission";
+import { checkCollectionPermission } from "../middleware/checkCollectionPermission";
 import { checkToken } from "../middleware/checkToken";
 import { validateBody } from "../utils/validation";
 
@@ -14,10 +14,10 @@ collectionRoutes
   .patch(
     "/:id",
     checkToken,
-    checkPermission("collection"),
+    checkCollectionPermission,
     validateBody(["name", "description", "topic", "img"]),
     CollectionController.updateCollection,
   )
-  .delete("/", checkToken, validateBody(["ids"]), CollectionController.deleteCollection);
+  .delete("/:id", checkToken, checkCollectionPermission, CollectionController.deleteCollection);
 
 export { collectionRoutes };

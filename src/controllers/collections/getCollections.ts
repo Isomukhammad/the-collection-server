@@ -25,6 +25,7 @@ const getDbCollections = async (
       },
     });
   }
+
   return prisma.collection.findMany({
     where: {
       isDeleted: false,
@@ -48,7 +49,6 @@ export const getCollections = async (req: Request, res: Response) => {
 
     res.status(200).json({
       status: req.__("success"),
-      // author: author,
       data: collections,
     });
   } catch (error: any) {

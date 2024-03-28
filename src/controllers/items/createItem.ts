@@ -52,8 +52,9 @@ export const createItem = async (req: Request, res: Response) => {
 
     res.status(201).json({
       status: req.__("success"),
-      data: newItem,
+      // data: newItem,
     });
+    console.log(collection_id, name, tags, fields);
   } catch (error) {
     res.status(500).json(error);
   }
