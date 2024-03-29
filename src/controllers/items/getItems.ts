@@ -42,6 +42,7 @@ export const getItems = async (req: Request, res: Response) => {
             }
           : undefined,
         collectionId: collectionId ? collectionId : undefined,
+        isDeleted: false,
       },
       orderBy: {
         [orderBy as keyof typeof prisma.item]: orderDirection,

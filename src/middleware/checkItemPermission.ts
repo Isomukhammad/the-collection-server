@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 
 import { prisma } from "../server";
+import { decodeJwt } from "../utils/decodeJwt";
 
 export const checkItemPermission = async (req: Request, res: Response, next: NextFunction) => {
   const { id: itemId } = req.params;
-  const { id: userId, role } = req.token as any;
+  const { id: userId, role } = decodeJwt(req.token as string);
 
   const item = await prisma.item.findUnique({
     where: {

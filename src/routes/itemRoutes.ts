@@ -11,6 +11,7 @@ itemRoutes
   .get("/", ItemController.getItems)
   .post("/", checkToken, validateBody(["collection_id", "name", "tags"]), ItemController.createItem)
   .get("/:id", ItemController.getItem)
-  .patch("/:id", checkToken, checkItemPermission, ItemController.deleteItem);
+  .delete("/:id", checkToken, checkItemPermission, ItemController.deleteItem)
+  .patch("/:id", checkToken, checkItemPermission, validateBody(["name", "tags"]), ItemController.editItem);
 
 export { itemRoutes };

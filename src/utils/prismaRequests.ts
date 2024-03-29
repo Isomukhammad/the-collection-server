@@ -14,6 +14,7 @@ export const getCollectionById = async (id: number) =>
   await prisma.collection.findUnique({
     where: {
       id: id,
+      isDeleted: false,
     },
     include: {
       author: {
@@ -29,6 +30,7 @@ export const deleteColelctionById = async (id: number) =>
   await prisma.collection.update({
     where: {
       id,
+      isDeleted: false,
     },
     data: {
       isDeleted: true,
@@ -39,6 +41,7 @@ export const deleteItemsByCollectionId = async (collectionId: number) => {
   await prisma.item.updateMany({
     where: {
       collectionId,
+      isDeleted: false,
     },
     data: {
       isDeleted: true,
@@ -50,6 +53,7 @@ export const getSingleItem = async (id: number, tags: boolean) =>
   await prisma.item.findUnique({
     where: {
       id: id,
+      isDeleted: false,
     },
     include: {
       author: {
