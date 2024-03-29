@@ -31,6 +31,7 @@ export const editItem = async (req: Request, res: Response) => {
       await prisma.item.update({
         where: { id: Number(id) },
         data: {
+          name,
           tags: {
             disconnect: tagsToRemove.length > 0 ? tagsToRemove.map((tag) => ({ name: tag })) : undefined,
             connect: tagsToConnect.length > 0 ? tagsToConnect.map((tag) => ({ id: tag.id })) : undefined,
