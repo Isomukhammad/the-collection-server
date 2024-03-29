@@ -1,11 +1,20 @@
 import { Request, Response } from "express";
 
 import { prisma } from "../../server";
-import { decodeJwt } from "../../utils/decodeJwt";
 
 export const updateCollection = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { name, description, topic, img } = req.body;
+
+  const thingsToUpdate: {
+    [key: string]: string;
+  } = {
+    name,
+    description,
+    topic,
+  };
+
+  if (img) thingsToUpdate.img = img;
 
   try {
     const updatedCollection = await prisma.collection.update({
@@ -13,10 +22,7 @@ export const updateCollection = async (req: Request, res: Response) => {
         id: Number(id),
       },
       data: {
-        name,
-        description,
-        topic,
-        img,
+        ...thingsToUpdate,
       },
     });
 

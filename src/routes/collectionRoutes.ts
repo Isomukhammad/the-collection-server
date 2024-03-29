@@ -11,13 +11,7 @@ collectionRoutes
   .get("/", CollectionController.getCollections)
   .get("/:id", CollectionController.getCollection)
   .post("/", checkToken, validateBody(["name", "description", "topic"], true), CollectionController.createCollection)
-  .patch(
-    "/:id",
-    checkToken,
-    checkCollectionPermission,
-    validateBody(["name", "description", "topic", "img"]),
-    CollectionController.updateCollection,
-  )
+  .patch("/:id", checkToken, checkCollectionPermission, CollectionController.updateCollection)
   .delete("/:id", checkToken, checkCollectionPermission, CollectionController.deleteCollection);
 
 export { collectionRoutes };
